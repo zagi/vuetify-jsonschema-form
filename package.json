@@ -1,13 +1,13 @@
 {
   "name": "@koumoul/vjsf",
-  "version": "1.25.0-beta.12",
+  "version": "2.5.2",
   "description": "Generate forms for the vuetify UI library (vuejs) based on annotated JSON schemas.",
   "main": "dist/main.js",
   "scripts": {
     "lint": "eslint --ext js,vue .",
     "lint-fix": "eslint --fix --ext js,vue .",
     "build": "rm -rf dist && webpack && cp lib/VJsf.css dist/main.css",
-    "prepublish": "npm run lint && npm test && npm run build && npm run doc-build",
+    "prepare": "npm run lint && npm test && npm run build && npm run doc-build",
     "postpublish": "gh-pages-multi deploy -v -s doc/dist -t latest",
     "test": "jest",
     "test-update": "jest --updateSnapshot",
@@ -47,14 +47,16 @@
   "homepage": "https://github.com/koumoul-dev/vuetify-jsonschema-form#readme",
   "dependencies": {
     "@mdi/js": "^5.5.55",
-    "ajv": "^6.12.0",
+    "ajv": "^8.6.2",
+    "ajv-formats": "^2.1.1",
+    "ajv-i18n": "^4.1.0",
     "debounce": "^1.2.0",
     "fast-copy": "^2.1.1",
     "fast-equals": "^2.0.0",
     "markdown-it": "^8.4.2",
     "match-all": "^1.2.5",
     "object-hash": "^2.1.1",
-    "property-expr": "^1.5.1",
+    "property-expr": "^2.0.4",
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
@@ -99,7 +101,7 @@
     "vue-cropperjs": "^4.2.0",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.11",
-    "vuetify": "^2.4.0",
+    "vuetify": "^2.5.2",
     "webpack": "^4.39.0",
     "webpack-cli": "^3.3.6",
     "yaml": "^1.7.1"

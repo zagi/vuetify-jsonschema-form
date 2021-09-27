@@ -4,11 +4,13 @@ const id = 'select'
 
 const title = 'Selects'
 
-const description = `Enums and oneOfs with const values are represented as select fields.
+const description = `Enums, oneOfs with const values and the \`x-fromData\` annotation can be used to create select fields.
 
 Arrays are represented as multi-value select fields.
 
-If the number of items is too large the select is replaced by a auto-complete.`
+If the number of items is too large the select is replaced by a auto-complete.
+
+The \`selectAll\` options can be used to add a "select all" action prepended to the list of items. It is only applied on multi-value select fields (not autocomplete).`
 
 const schema = {
   type: 'object',
@@ -40,10 +42,30 @@ const schema = {
       enum: randomWords({ exactly: 25, wordsPerString: 2 }),
       description: 'This description is used as a help message.',
       'x-display': 'autocomplete'
+    },
+    stringContext: {
+      type: 'string',
+      title: `I'm a string with values from the context`,
+      'x-fromData': 'context.items'
+    },
+    objectContext: {
+      type: 'object',
+      title: `I'm an object with values from the context`,
+      'x-fromData': 'context.objectItems',
+      'x-itemKey': 'val',
+      'x-itemTitle': 'label'
     }
   }
 }
 
+const options = {
+  context: {
+    items: ['value 1', 'value 2'],
+    objectItems: [{ val: 'value1', label: 'Value 1' }, { val: 'value2', label: 'Value 2' }]
+  },
+  selectAll: true
+}
+
 const model = {}
 
-export default { id, title, description, schema, model }
+export default { id, title, description, schema, model, options }

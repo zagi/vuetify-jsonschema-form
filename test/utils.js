@@ -6,8 +6,6 @@ import VJsf from '../lib/VJsfNoDeps.js'
 import ExampleForm from './example-form.vue'
 import { defaultTemplate } from '../doc/examples'
 
-const Ajv = require('ajv')
-
 Vue.use(Vuetify)
 const localVue = createLocalVue()
 localVue.component('v-jsf', VJsf)
@@ -25,7 +23,7 @@ exports.getExampleWrapper = (example) => {
     .replace('"model"', '"props.modelWrapper.model"')
     .replace('"schema"', '"props.schema"')
     .replace('"options"', '"props.options"')
-    .replace('logEvent', 'props.logEvent')
+    .replace(/logEvent/g, 'props.logEvent')
 
   if (template.includes('slot-scope')) {
     // TODO: investigate
@@ -33,9 +31,15 @@ exports.getExampleWrapper = (example) => {
     return
   }
 
+  const Ajv = require('ajv')
+  const ajvFormats = require('ajv-formats')
+  const ajvLocalize = require('ajv-i18n')
+
   const options = {
     ...example.options,
-    ajv: Ajv(),
+    Ajv,
+    ajvFormats,
+    ajvLocalize,
     httpLib: {
       get: (url) => {
         const result = example.httpMocks[url]
@@ -48,19 +52,26 @@ exports.getExampleWrapper = (example) => {
     }
   }
 
-  return mount(ExampleForm, {
+  const modelWrapper = { model: example.model || {} }
+
+  const events = []
+
+  const wrapper = mount(ExampleForm, {
     localVue,
     vuetify,
     scopedSlots: {
       default: template
     },
     propsData: {
-      modelWrapper: { model: example.model || {} },
+      modelWrapper,
       schema: example.schema,
-      options
+      options,
+      logEvent: (key, event) => events.push({ key, event })
     },
     provide: {
       theme: {}
     }
   })
+
+  return { wrapper, modelWrapper, events }
 }
